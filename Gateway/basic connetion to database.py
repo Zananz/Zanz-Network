@@ -1,9 +1,9 @@
 import socket
-
+import time
 HEADER = 64
-PORT = 5051
+PORT = 52000
 FORMAT = "utf-8"
-DISCONNET_MASSAGE = "!DISCONECT"
+DISCONNET_MASSAGE = "!DISCONNECT"
 SERVER = "127.0.1.1"
 ADDR = (SERVER, PORT)
 
@@ -19,5 +19,6 @@ def send(msg):
     client.send(send_length)
     client.send(message)
 
-send("hello")
-send(DISCONNET_MASSAGE)
+send("Zananz0000hello")
+time.sleep(40)
+#send(DISCONNET_MASSAGE)

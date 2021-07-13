@@ -1,5 +1,6 @@
 import socket
-import time
+
+
 HEADER = 64
 PORT = 52000
 FORMAT = "utf-8"
@@ -20,5 +21,4 @@ def send(msg):
     client.send(message)
 
 send("Zananz0000hello")
-time.sleep(40)
-#send(DISCONNET_MASSAGE)
+send(DISCONNET_MASSAGE)

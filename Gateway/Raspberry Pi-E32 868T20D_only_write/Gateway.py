@@ -27,10 +27,11 @@ def send(msg): # send a message to the database
     msg_length = len(message)
     send_length = str(msg_length).encode(FORMAT)
     send_length += b" " * (HEADER - len(send_length))
-    print(send_length, message)
+    
     client.send(send_length)
     client.send(message)
-
+    
+    print(f"[MESSAGE SEND] {message}")
 
 try: #to safely disconnect from database in case of an error
 
@@ -39,11 +40,13 @@ try: #to safely disconnect from database in case of an error
     while True:
 
         in_come = ser.readline() # wait till input
+        print(in_come)
         in_come = in_come.decode()
+        print(in_come)
         in_come = in_come.replace("\n", "").replace("\r", "")
-
+        print(in_come)
         send(in_come)
 
-except:
+finally:
     send(DISCONNET_MASSAGE)
-    print()
+    

@@ -1,9 +1,9 @@
-#Project
+# Project
 
 ---
 Zanz Network is a LoRa system. Data send by devices via LoRa will be received by Gateway. Gateways connect to a Server witch writes to a database.
 
-##Connection to Database
+## Connection to Database
 
 ---
 
@@ -13,7 +13,7 @@ To connect to the database, write parameters to Database/server.py
 
 ---
 
-##Gateways 
+## Gateways 
 
 --- 
 
@@ -21,6 +21,6 @@ To run a Gateway read Gateway/README.md
 
 ---
 
-##Devices
+## Devices
 
 Devices connect to the Gateway vai LoRa.

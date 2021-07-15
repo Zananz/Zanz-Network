@@ -27,8 +27,7 @@ class MySQL_Database():
             );""")
         except:
             print(Exception)
-        print(str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-        print(msg)
+
         cursor.execute(""" INSERT INTO ID_%s (date, message) VALUES (
                             '%s',
                             '%s')
@@ -36,5 +35,13 @@ class MySQL_Database():
         self.db.commit()
         cursor.close()
 
+    def read(self, ID:str):
 
+        cursor = self.db.cursor()
+        cursor.execute(f"SELECT * FROM ID_{ID}")
 
+        data = cursor.fetchall()
+
+        cursor.close()
+
+        return str(data)

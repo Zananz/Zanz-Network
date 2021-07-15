@@ -26,7 +26,7 @@ class MySQL_Database():
             message VARCHAR(100)  
             );""")
         except:
-            print(Exception)
+            pass
 
         cursor.execute(""" INSERT INTO ID_%s (date, message) VALUES (
                             '%s',

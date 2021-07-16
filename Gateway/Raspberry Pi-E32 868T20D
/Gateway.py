@@ -96,3 +96,4 @@ def gateway_read_application_write_LoRa():  # applications can send messages wit
 
 
 threading.Thread(target=gateway_read_LoRA_write_to_database).start()
+gateway_read_application_write_LoRa()

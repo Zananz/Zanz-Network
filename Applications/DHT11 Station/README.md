@@ -1,0 +1,1 @@
+A application that writes the data from the [DHT11-Pico Project](https://github.com/Zananz/Zanz-Network/tree/main/Devices/DHT11-Pico) into a htlm-page.

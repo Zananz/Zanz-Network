@@ -1,5 +1,6 @@
 import socket
 import time
+import math
 
 HEADER = 64
 PORT = 52000
@@ -26,8 +27,13 @@ def read(ID: str):
     client.send(message)
 
     message_length = client.recv(HEADER).decode(FORMAT)
-    message = client.recv(int(message_length)).decode(FORMAT)
-    return message
+    message = ""
+    for i in range(math.ceil(int(message_length)/1440)):
+        message += client.recv(int(message_length)).decode(FORMAT)
+    
+    print(message)
+    
+    return(message)
 
 
 def send(msg):
@@ -44,7 +50,7 @@ try:  # to alwas disconect from server
 
     while True:
         data = read(ID)  # get data from database
-
+        print(len(data))
         data = " " + data.replace("[", "").replace("]", "").replace("'", "").replace(",", "").replace("(", "")  # reformat
         data = data.split(")")
         data_list = []
@@ -60,6 +66,7 @@ try:  # to alwas disconect from server
         temperature, humidity = last_data[2].replace("T","").split("L")
 
         with open("/var/www/html/Luft Station.html", "w") as html:
+            print(1)
             html.write("""<!DOCTYPE html>
                             <html lang=de dir="ltr">
                               <head>
@@ -87,6 +94,8 @@ try:  # to alwas disconect from server
                               </body>
                             </html>"""%(temperature, round(float(humidity)), date))
             html.close()
+            
+        data = data[::-1]
 
         data_all_str = ""  # to write into html later
 
@@ -99,7 +108,7 @@ try:  # to alwas disconect from server
                                     <td class = "h24_tabelle_werte">%s°&nbsp;%s%%</td>
                                 </tr>"""%(date, temperature, round(float(humidity)))
 
-        with open("var/www/html/Vergangene Messungen.html", "w") as html:
+        with open("/var/www/html/Vergangene Messungen.html", "w") as html:
             html.write("""
                 <!DOCTYPE html>
                 <html lang=de dir="ltr">
@@ -135,3 +144,4 @@ try:  # to alwas disconect from server
 
 finally:
     send(DISCONNET_MASSAGE)
+    print("Disconnected")

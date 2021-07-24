@@ -1,6 +1,7 @@
 import socket
 import serial
 import threading
+import math
 
 HEADER = 64  # Length of number send to set message length. Don't change must be the same for client and server
 FORMAT = "utf-8"
@@ -69,7 +70,10 @@ def handle_client(conn, addr):
 
         if msg_length:  # (can be None)
 
-            msg = conn.recv(len(msg_length)).decode(FORMAT)  # receive message
+            msg = ""
+
+            for i in range(math.ceil(int(msg_length) / 1440)):  # message length is limited to 1440 byts
+                msg += client.recv(int(msg_length)).decode(FORMAT)
 
             if msg == DISCONNET_MASSAGE:
                 connected = False

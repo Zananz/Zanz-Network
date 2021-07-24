@@ -1,6 +1,7 @@
 import socket
 import threading
 import database
+import math
 
 # fixed values
 HEADER = 64
@@ -30,7 +31,11 @@ def handel_client(conn, addr):  # will get called for every client
 
         if msg_length:
             msg_length = int(msg_length)
-            msg = conn.recv(msg_length).decode(FORMAT)
+            msg = ""
+
+            for i in range(math.ceil(int(msg_length) / 1440)):  # message length is limited to 1440 byts
+                msg += server.recv(int(msg_length)).decode(FORMAT)
+
             print(f"[INCOME] {addr[0]} : {msg}")
 
             if msg == DISCONNET_MASSAGE:

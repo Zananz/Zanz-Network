@@ -11,13 +11,8 @@ ADDR = (SERVER, PORT)
 READ_COMMAND = "!READ"
 ID = "0004"  # id of the device
 
-# has to stand at the beginning of every message
 
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(ADDR)  # connect to server
-
-
-def read(ID: str):
+def read(ID: str, client):
     message = (READ_COMMAND + ID).encode(FORMAT)
     msg_length = len(message)
     send_length = str(msg_length).encode(FORMAT)
@@ -34,7 +29,7 @@ def read(ID: str):
     return message
 
 
-def send(msg):
+def send(msg, client):
     message = msg.encode(FORMAT)
     msg_length = len(message)
     send_length = str(msg_length).encode(FORMAT)
@@ -44,60 +39,74 @@ def send(msg):
     client.send(message)
 
 
-try:  # to always disconnect from server
+def run():
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect(ADDR)  # connect to server
 
-    while True:
-        data = read(ID)  # get data from database
+    try:  # to always disconnect from server
 
-        data = " " + data.replace("[", "").replace("]", "").replace("'", "").replace(",", "").replace("(","")  # reformat
-        data = data.split(")")
-        data_list = []
-        for insert in data:
-            data_list.append(insert.split(" ")[1:4])
+        while True:
+            data = read(ID, client)  # get data from database
 
-        data = data_list
-        data = data[:-1]  # to remove extra space at the end
-        data = data[::-1]
+            data = " " + data.replace("[", "").replace("]", "").replace("'", "").replace(",", "").replace("(", "")  # reformat
+            data = data.split(")")
+            data_list = []
+            for insert in data:
+                data_list.append(insert.split(" ")[1:4])
 
-        date, data = (data[0][0] + data[0][1] , data[2])
+            data = data_list
+            data = data[:-1]  # to remove extra space at the end
+            data = data[::-1]
 
-        software = data[0]  # state of the door by software(0=open, 1=close)
-        hardware = data[1]  # state of the door by hardware(0=open, 1=close)
+            date, data = (data[0][0] + data[0][1], data[2])
 
-        if software == "1":
-            software = "geschlossen"
-        else:
-            software = "offen"
+            software = data[0]  # state of the door by software(0=open, 1=close)
+            hardware = data[1]  # state of the door by hardware(0=open, 1=close)
 
-        if hardware == "1":
-            hardware = "geschlossen"
-        else:
-            hardware = "offen"
+            if software == "1":
+                software = "geschlossen"
+            else:
+                software = "offen"
 
-        with open("/var/www/html/Hühnerklappe.html", "w") as html:
-            html.write("""  <!DOCTYPE html>
-                            <html lang="de" dir="ltr">
-                            <head>
-                              <meta charset="utf-8">
-                              <link rel="stylesheet" href="style.css", type="text/css">
-                              <link rel="icon" type="image/png" href="Bilder/icon.png" sizes="96x96">
-                              <title>Sensor Stationen</title>
-                            </head>
-                              <body>
-                                <div id="menü_gesamt">
-                                  <a href="index.html"><img src="Bilder/Logo.png" alt="Logo" height="75px" id="menü_logo"></a>
-                                </div>
-                                <div id="seiteninhalt">
-                                  <h1>Hühnerklappe</h1>
-                                  <br><br><br><br><br><br>
-                                  <p class = "Zustand_Klappe">Laut Software: %s</p>
-                                  <p class = "Zustand_Klappe">Laut Hardware: %s</p>
-                                  <p id="label_letzte_aktualisierung">zuletzt aktual.: %s</p>
-                                </div>
-                              </body>
-                            </html>
-                        """%(software, hardware, data))
-        time.sleep(600)
+            if hardware == "1":
+                hardware = "geschlossen"
+            else:
+                hardware = "offen"
 
-finally:
-    send(DISCONNET_MASSAGE)
+            with open("/var/www/html/Hühnerklappe.html", "w") as html:
+                html.write("""  <!DOCTYPE html>
+                                <html lang="de" dir="ltr">
+                                <head>
+                                  <meta charset="utf-8">
+                                  <link rel="stylesheet" href="style.css", type="text/css">
+                                  <link rel="icon" type="image/png" href="Bilder/icon.png" sizes="96x96">
+                                  <title>Sensor Stationen</title>
+                                </head>
+                                  <body>
+                                    <div id="menü_gesamt">
+                                      <a href="index.html"><img src="Bilder/Logo.png" alt="Logo" height="75px" id="menü_logo"></a>
+                                    </div>
+                                    <div id="seiteninhalt">
+                                      <h1>Hühnerklappe</h1>
+                                      <br><br><br><br><br><br>
+                                      <p class = "Zustand_Klappe">Laut Software: %s</p>
+                                      <p class = "Zustand_Klappe">Laut Hardware: %s</p>
+                                      <p id="label_letzte_aktualisierung">zuletzt aktual.: %s</p>
+                                    </div>
+                                  </body>
+                                </html>
+                            """ % (software, hardware, data))
+            time.sleep(600)
+
+    except BrokenPipeError:  # most likely caused by a chance of the public Ip
+        print("[BROKEN PIPE] most most likely caused by a chance of the public Ip. Try to fix automatically.")
+        print("[TRY TO RECONNECT IN]:")
+        for i in range(5):
+            print(5 - i)
+            time.sleep(1)
+        run()
+    finally:
+        send(DISCONNET_MASSAGE, client)
+
+
+run()

@@ -140,7 +140,7 @@ try:  # to alwas disconect from server
                 </html>""" % data_all_str)
 
             html.close()
-        time.sleep(600)
+        time.sleep(60)
 
 finally:
     send(DISCONNET_MASSAGE)

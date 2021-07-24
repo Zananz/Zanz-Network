@@ -58,7 +58,7 @@ def run():
             data = data[:-1]  # to remove extra space at the end
             data = data[::-1]
 
-            date, data = (data[0][0] + data[0][1], data[2])
+            date, data = (data[0][0] + " " + data[0][1], data[2])
 
             software = data[0]  # state of the door by software(0=open, 1=close)
             hardware = data[1]  # state of the door by hardware(0=open, 1=close)
@@ -96,7 +96,7 @@ def run():
                                   </body>
                                 </html>
                             """ % (software, hardware, date))
-            time.sleep(600)
+            time.sleep(60)
 
     except BrokenPipeError:  # most likely caused by a chance of the public Ip
         print("[BROKEN PIPE] most most likely caused by a chance of the public Ip. Try to fix automatically.")

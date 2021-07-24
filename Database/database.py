@@ -43,5 +43,5 @@ class MySQL_Database():
         data = cursor.fetchall()
 
         cursor.close()
-
+        print(len(data))
         return str(data)

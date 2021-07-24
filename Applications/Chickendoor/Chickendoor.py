@@ -95,7 +95,7 @@ def run():
                                     </div>
                                   </body>
                                 </html>
-                            """ % (software, hardware, data))
+                            """ % (software, hardware, date))
             time.sleep(600)
 
     except BrokenPipeError:  # most likely caused by a chance of the public Ip

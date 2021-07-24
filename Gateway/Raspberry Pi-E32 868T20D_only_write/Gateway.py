@@ -6,7 +6,7 @@ HEADER = 64 # Length of number send to set message length. Don't change must be 
 PORT = 52000
 FORMAT = "utf-8"
 DISCONNET_MASSAGE = "!DISCONNECT"
-SERVER = "192.168.178.35"
+SERVER = "217.160.254.52"
 ADDR = (SERVER, PORT)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -40,11 +40,8 @@ try: #to safely disconnect from database in case of an error
     while True:
 
         in_come = ser.readline() # wait till input
-        print(in_come)
         in_come = in_come.decode()
-        print(in_come)
         in_come = in_come.replace("\n", "").replace("\r", "")
-        print(in_come)
         send(in_come)
 
 finally:

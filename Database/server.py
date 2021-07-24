@@ -5,14 +5,14 @@ import database
 # fixed values
 HEADER = 64
 PORT = 52000
-SERVER = "192.168.178.35"  # to find IP addr automatic socket.gethostbyname(socket.gethostname()) # get IP addr
+SERVER = "217.160.254.52"  #IP USED for the socket. To find IP addr automatic socket.gethostbyname(socket.gethostname()) # get IP addr
 ADDR = (SERVER, PORT)
 FORMAT = "utf-8"
 DISCONNET_MASSAGE = "!DISCONNECT"  # A Massage to quit connection (Server-Client)
 KEY = "Zananz"  # A KEY that needs to be at the beginning from every message send from a gateway/application. To enable writing/read to Database
-IP_MySQL_SERVER = "192.168.178.43"
+IP_MySQL_SERVER = "127.0.0.1"
 USER = "franz"  # username from MySQL
-PASSWORD = "#MySQL4Ubuntu-Server"  # passwd of the user from MySQL
+PASSWORD = "Password:type:passwd = 'Püs6/D>sdg$vUhdT50mH%)=|~ß568gtsnf39hvsdZH&9ght09+*~#18hns’'"  # passwd of the user from MySQL
 DATABASE_NAME = "Zanz_Network"  # the name of the database
 READ_COMMAND = "!READ"  # A command send after the KEY that tells the program to read from Database. (send ID after)
 
@@ -44,7 +44,7 @@ def handel_client(conn, addr):  # will get called for every client
             elif msg[:len(READ_COMMAND)] == READ_COMMAND:  # check for read command
                 ID = msg[len(READ_COMMAND):]  # remove read command
 
-                data = DATABASE.read(ID).encode()  # get all inserts from a device
+                data = DATABASE.read(ID).encode(FORMAT)  # get all inserts from a device
                 data_length = len(data)
                 data_length = str(data_length).encode(FORMAT)
 

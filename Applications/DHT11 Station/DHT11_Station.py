@@ -28,10 +28,10 @@ def read(ID: str):
 
     message_length = client.recv(HEADER).decode(FORMAT)
     message = ""
-    for i in range(math.ceil(int(message_length)/1440)):
+
+    for i in range(math.ceil(int(message_length)/1440)):  # message length is limited to 1440 byts
         message += client.recv(int(message_length)).decode(FORMAT)
-    
-    print(message)
+
     
     return(message)
 
@@ -50,7 +50,7 @@ try:  # to alwas disconect from server
 
     while True:
         data = read(ID)  # get data from database
-        print(len(data))
+       
         data = " " + data.replace("[", "").replace("]", "").replace("'", "").replace(",", "").replace("(", "")  # reformat
         data = data.split(")")
         data_list = []
@@ -66,7 +66,7 @@ try:  # to alwas disconect from server
         temperature, humidity = last_data[2].replace("T","").split("L")
 
         with open("/var/www/html/Luft Station.html", "w") as html:
-            print(1)
+            
             html.write("""<!DOCTYPE html>
                             <html lang=de dir="ltr">
                               <head>
@@ -140,7 +140,7 @@ try:  # to alwas disconect from server
                 </html>""" % data_all_str)
 
             html.close()
-        time.sleep(600)
+        time.sleep(60)
 
 finally:
     send(DISCONNET_MASSAGE)

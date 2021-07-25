@@ -9,6 +9,9 @@ DISCONNET_MASSAGE = "!DISCONNECT"
 SERVER = "192.168.178.35"
 ADDR = (SERVER, PORT)
 
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect(ADDR)
+
 ser = serial.Serial( # E32 686T20D is connected via USB
      port='/dev/ttyACM0',
      baudrate = 9600,
@@ -19,7 +22,7 @@ ser = serial.Serial( # E32 686T20D is connected via USB
 )
 
 
-def send(msg, client): # send a message to the database
+def send(msg): # send a message to the database
     message = msg.encode(FORMAT)
     msg_length = len(message)
     send_length = str(msg_length).encode(FORMAT)
@@ -30,32 +33,20 @@ def send(msg, client): # send a message to the database
     
     print(f"[MESSAGE SEND] {message}")
 
-def run():
-    try: #to safely disconnect from database in case of an error
+try: #to safely disconnect from database in case of an error
 
-        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.connect(ADDR)
+    print("Gateway started...")
 
-        print("Gateway started...")
+    while True:
 
-        while True:
+        in_come = ser.readline() # wait till input
+        print(in_come)
+        in_come = in_come.decode()
+        print(in_come)
+        in_come = in_come.replace("\n", "").replace("\r", "")
+        print(in_come)
+        send(in_come)
 
-            in_come = ser.readline() # wait till input
-            print(in_come)
-            in_come = in_come.decode()
-            print(in_come)
-            in_come = in_come.replace("\n", "").replace("\r", "")
-            print(in_come)
-            send(in_come, client)
-
-    except BrokenPipeError:  # most likely caused by a chance of the public Ip
-        print("[BROKEN PIPE] most most likely caused by a chance of the public Ip. Try to fix automatically.")
-        print("[TRY TO RECONNECT IN]:")
-        for i in range(5):
-            print(5 - i)
-            time.sleep(1)
-        run()
-
-    finally:
-        send(DISCONNET_MASSAGE)
+finally:
+    send(DISCONNET_MASSAGE)
     

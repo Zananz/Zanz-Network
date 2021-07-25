@@ -9,9 +9,6 @@ DISCONNET_MASSAGE = "!DISCONNECT"
 SERVER = "192.168.178.35"
 ADDR = (SERVER, PORT)
 
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(ADDR)
-
 ser = serial.Serial( # E32 686T20D is connected via USB
      port='/dev/ttyACM0',
      baudrate = 9600,
@@ -22,7 +19,7 @@ ser = serial.Serial( # E32 686T20D is connected via USB
 )
 
 
-def send(msg): # send a message to the database
+def send(msg, client): # send a message to the database
     message = msg.encode(FORMAT)
     msg_length = len(message)
     send_length = str(msg_length).encode(FORMAT)
@@ -33,20 +30,25 @@ def send(msg): # send a message to the database
     
     print(f"[MESSAGE SEND] {message}")
 
-try: #to safely disconnect from database in case of an error
+def run():
 
-    print("Gateway started...")
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect(ADDR)
 
-    while True:
+    try:  # to safely disconnect from database in case of an error
 
-        in_come = ser.readline() # wait till input
-        print(in_come)
-        in_come = in_come.decode()
-        print(in_come)
-        in_come = in_come.replace("\n", "").replace("\r", "")
-        print(in_come)
-        send(in_come)
+        print("Gateway started...")
 
-finally:
-    send(DISCONNET_MASSAGE)
+        while True:
+
+            in_come = ser.readline() # wait till input
+            print(in_come)
+            in_come = in_come.decode()
+            print(in_come)
+            in_come = in_come.replace("\n", "").replace("\r", "")
+            print(in_come)
+            send(in_come, client)
+
+    finally:
+        send(DISCONNET_MASSAGE, client)
     

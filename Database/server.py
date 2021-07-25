@@ -34,7 +34,7 @@ def handel_client(conn, addr):  # will get called for every client
             msg = ""
 
             for i in range(math.ceil(int(msg_length) / 1440)):  # message length is limited to 1440 byts
-                msg += server.recv(int(msg_length)).decode(FORMAT)
+                msg += conn.recv(int(msg_length)).decode(FORMAT)
 
             print(f"[INCOME] {addr[0]} : {msg}")
 

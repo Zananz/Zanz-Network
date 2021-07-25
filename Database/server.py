@@ -43,8 +43,10 @@ def handel_client(conn, addr):  # will get called for every client
                 print(f"[CONNECTION QUIT] {addr[0]}")
 
             elif msg[:len(KEY)] == KEY:  # check for key
-                msg = msg[len(KEY):]  # remove key from message
-                DATABASE.write(msg)  # msg hase still ID at the beginning
+                all_msg = msg.split(KEY)  # in case of multiple messages in one str
+                all_msg = all_msg[1:]
+                for msg in all_msg:
+                    DATABASE.write(msg)  # msg hase still ID at the beginning
 
             elif msg[:len(READ_COMMAND)] == READ_COMMAND:  # check for read command
                 ID = msg[len(READ_COMMAND):]  # remove read command

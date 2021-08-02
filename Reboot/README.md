@@ -1,0 +1,1 @@
+Needed to restart at 4am. Ubuntu needs to restart 2 min before Raspberry OS because Ubuntu is the server and Raspberry OS the client.
